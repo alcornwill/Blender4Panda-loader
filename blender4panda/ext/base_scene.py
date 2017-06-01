@@ -13,11 +13,13 @@ def linearrgb_to_srgb(col):
         if c < 0.0031308:
             new_col.append(max(0, c * 12.92))
         else:
-            new_col.append(1.055 * pow(c, 1.0/2.4) - 0.055);
+            new_col.append(1.055 * pow(c, 1.0/2.4) - 0.055)
     return new_col
 
 def invoke(scene, data, action):
     if action == 'LOAD':
+        # todo doesn't work with drive letter
+        # scene_path = '/' + os.path.dirname(scene.jsd_file).replace(':', '')
         scene_path = os.path.dirname(scene.jsd_file)
         if 'paths' in data:
             scene.path_dict.update(data['paths'])
@@ -25,8 +27,9 @@ def invoke(scene, data, action):
             scene.path_dict[path] = os.path.join(scene_path, scene.path_dict[path]).replace('\\','/')
         getModelPath().appendPath(scene.path_dict['meshes'])
         if 'scene_mesh' in data:
-            path = os.path.join(scene.path_dict['meshes'], data['scene_mesh'])
-            model = scene.loader.loadModel(path)
+            path = os.path.join(scene.path_dict['meshes'], data['scene_mesh']).replace('\\','/')
+            model = scene.loader.loadModel("/c/Users/alcor_000/Projects/my_panda_game/assets/res/testscene1.egg")
+            # model = scene.loader.loadModel(path)
             model.reparent_to(scene.root)
             scene.mesh = model
         else:

@@ -60,7 +60,7 @@ def invoke(scene, obj, action):
             elif obj['lamp_type'] == 'SUN':
                 light = DirectionalLight(obj['name'])
                 lens = light.getLens()
-                lens.setFilmSize(obj['film_size']*2, obj['film_size']*2)
+                # lens.setFilmSize(obj['film_size']*2, obj['film_size']*2)
             elif obj['lamp_type'] == 'SPOT':
                 light = Spotlight(obj['name'])
                 lens = light.getLens()

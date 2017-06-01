@@ -69,7 +69,7 @@ def make_collision_bounds_shape(scene, obj, dynamic=True):
 def invoke(scene, obj, action):
 
     if action == 'LOAD':
-                       
+
         node = BulletRigidBodyNode(obj['name'])
         shape = None
         if obj['phys_type'] == 'STATIC':
@@ -79,13 +79,13 @@ def invoke(scene, obj, action):
                 if obj['type'] == 'MESH':
                     mesh = make_bullet_mesh(scene, BulletTriangleMesh, scene.meshes[obj['name']])
                     shape = BulletTriangleMeshShape(mesh, dynamic=False)
-                    
+
         elif obj['phys_type'] == 'RIGID_BODY':
             if 'phys_collision_bounds' in obj:
                 shape = make_collision_bounds_shape(scene, obj)
             else:
                 shape = BulletSphereShape(obj['phys_radius'])
-                
+
             node.setMass(obj['phys_mass'])
 
 
@@ -101,7 +101,7 @@ def invoke(scene, obj, action):
                         break
             else:
                 node.set_friction(1.0)
-            
+
             # Sleepeng (deactivation) options
             if obj['phys_deactivation']:
                 scene_data = scene.data_dict['scene']
@@ -115,12 +115,12 @@ def invoke(scene, obj, action):
 
             if 'phys_friction_coefficients' in obj:
                 node.set_anisotropic_friction(Vec3(*obj['phys_friction_coefficients']))
-            
+
             # Linear and angular damping
             node.set_linear_damping(obj['phys_linear_damping'])
             node.set_angular_damping(obj['phys_angular_damping'])
             #node.set_inertia(0.9)
-            
+
             # Linear and angular locking
             if True in obj['phys_lock_location']:
                 v = Vec3(*map(int, obj['phys_lock_location']))
@@ -128,19 +128,19 @@ def invoke(scene, obj, action):
             if True in obj['phys_lock_rotation']:
                 v = Vec3(*map(int, obj['phys_lock_rotation']))
                 node.set_angular_factor(v)
-            
+
             np = scene.root.attachNewNode(node)
-            
+
             mask = BitMask32()
             for i,val in enumerate(obj['phys_collision_mask']):
                 if val: mask.set_bit(i)
             np.set_collide_mask(mask)
-            
+
             np.setMat(scene.meshes[obj['name']].getMat())
 
             scene.meshes[obj['name']].wrtReparentTo(np)
             scene.phys_world.attachRigidBody(node)
-            
+
             scene.objects[obj['name']] = np
 
         if obj['invisible']:
