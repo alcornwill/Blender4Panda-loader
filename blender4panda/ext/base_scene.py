@@ -16,25 +16,20 @@ def linearrgb_to_srgb(col):
             new_col.append(1.055 * pow(c, 1.0/2.4) - 0.055)
     return new_col
 
-def invoke(scene, data, action):
+def invoke(scene, data_dict, action):
+    data = data_dict['scene']
     if action == 'LOAD':
-        # todo doesn't work with drive letter
-        # scene_path = '/' + os.path.dirname(scene.jsd_file).replace(':', '')
-        scene_path = os.path.dirname(scene.jsd_file)
-        if 'paths' in data:
-            scene.path_dict.update(data['paths'])
-        for path in scene.path_dict:
-            scene.path_dict[path] = os.path.join(scene_path, scene.path_dict[path]).replace('\\','/')
-        getModelPath().appendPath(scene.path_dict['meshes'])
-        if 'scene_mesh' in data:
-            path = os.path.join(scene.path_dict['meshes'], data['scene_mesh']).replace('\\','/')
-            model = scene.loader.loadModel("/c/Users/alcor_000/Projects/my_panda_game/assets/res/testscene1.egg")
-            # model = scene.loader.loadModel(path)
-            model.reparent_to(scene.root)
-            scene.mesh = model
-        else:
-            scene.mesh = NodePath('scene_mesh')
-            scene.mesh.reparentTo(scene.root)
+        egg_file = scene.jsd_file.replace('.egg.json', '.egg')
+        egg_file = egg_file.replace('\\','/')
+        if ':' in egg_file:
+            # has drive letter
+            egg_file = egg_file.replace(':', '')
+            drive_letter, egg_file = egg_file[:1], egg_file[1:]
+            drive_letter = drive_letter.lower()
+            egg_file = '/' + drive_letter + egg_file
+        model = scene.loader.loadModel(egg_file)
+        model.reparent_to(scene.root)
+        scene.mesh = model
         if 'horizon_color' in data:
             r,g,b = linearrgb_to_srgb(data['horizon_color'])
             #r,g,b = data['horizon_color']
