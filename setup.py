@@ -1,9 +1,9 @@
 from distutils.core import setup
 
 setup(
-    name='blender4panda',
+    name='panda_scene_loader',
     version='1.0',
-    packages=['blender4panda', 'blender4panda.ext'],
+    packages=['panda_scene_loader', 'panda_scene_loader.ext'],
     url='https://github.com/alcornwill/Blender4Panda-loader',
     license='',
     author='09th, alcornwill',
