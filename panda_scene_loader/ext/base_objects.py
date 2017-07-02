@@ -41,7 +41,6 @@ def make_shadow_cam(name, obj):
     # LCam.reparentTo(scene.lights[name]['NP'])
     return Ldepthmap, LCam
 
-
 def invoke(data, fname):
     for name, obj in data['objects'].items():
         if obj['type'] == 'LAMP':
@@ -49,7 +48,9 @@ def invoke(data, fname):
             if obj['lamp_type'] == 'POINT':
                 light = PointLight(name)
                 # wow render.ls() says point light inherits (PerspectiveLens, PerspectiveLens, PerspectiveLens, ...)
-                # todo attenuation, attenuation algorithm?
+                # todo attenuation algorithm
+                att = obj['lamp_distance']
+                light.setAttenuation((att, 0, 0))
             elif obj['lamp_type'] == 'SUN':
                 light = DirectionalLight(name)
                 # lens = light.getLens()

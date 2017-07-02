@@ -32,8 +32,10 @@ def invoke(data_dict, fname):
         r,g,b = linearrgb_to_srgb(data['horizon_color'])
         #r,g,b = data['horizon_color']
         base.win.setClearColor((r, g, b, 1))
-    node = AmbientLight("Ambient Light")
-    color = data['ambient_color']
-    node.setColor(Vec4(color[0], color[1], color[2], 1.0))
-    np = NodePath(node)
-    np.reparent_to(render)
+    if 'ambient_color' in data:
+        node = AmbientLight("Ambient Light")
+        color = data['ambient_color']
+        node.setColor(Vec4(color[0], color[1], color[2], 1.0))
+        np = NodePath(node)
+        np.reparent_to(render)
+        render.setLight(np)
