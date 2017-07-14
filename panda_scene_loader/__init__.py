@@ -1,7 +1,7 @@
-from panda3d.core import Plane, Vec3, Point3
+
 import json
 from ext import extensions
-
+from os.path import basename
 
 # Known restrictions:
 # 1. You should work with "Blender Game" engine instead of standart "Blender Render"
@@ -25,3 +25,7 @@ def load(fname):
         name = ext.__name__.split('.')[-1]
         if name not in extensions_: continue
         ext.invoke(data_dict, fname)
+
+    fn = basename(fname).replace('.egg.json', '.egg')
+    root = render.find(fn)
+    return root

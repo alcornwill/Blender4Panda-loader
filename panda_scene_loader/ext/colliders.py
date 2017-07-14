@@ -36,6 +36,7 @@ def invoke(data_dict, fname):
         col.addSolid(solid) # if was compound add here
         col.setFromCollideMask(from_)
         col.setIntoCollideMask(into)
+        col.setPythonTag('link', parent)  # we do this now
         np = parent.attachNewNode(col)  # might want to replace parent?
         handler = CollisionHandlerQueue()  # might want to parametize type of handler
         base.cTrav.addCollider(np, handler)
