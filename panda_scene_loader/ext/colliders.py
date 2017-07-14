@@ -20,7 +20,12 @@ def invoke(data_dict, fname):
         bounds = collider["bounds"]
         radius = [i / 2.0 for i in bounds]
 
-        # NOTE: only BOX, CAPSULE and SPHERE supported
+        # NOTE: only TRIANGLE_MESH, BOX, CAPSULE and SPHERE supported
+        if collider["type"] == "TRIANGLE_MESH":
+            # use visible geometry
+            parent.node().setIntoCollideMask(into)
+            parent.setPythonTag('link', parent)
+            continue
         if collider["type"] == "BOX":
             solid = CollisionBox(0.0, radius[0], radius[1], radius[2])
         if collider["type"] == "CAPSULE":
