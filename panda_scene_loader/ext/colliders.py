@@ -45,4 +45,3 @@ def invoke(data_dict, fname):
         np = parent.attachNewNode(col)  # might want to replace parent?
         handler = CollisionHandlerQueue()  # might want to parametize type of handler
         base.cTrav.addCollider(np, handler)
-        base.colliders.append(np)

@@ -41,13 +41,14 @@ def import_module(name, package=None):
 
 extensions = []
 ext_names = []
+ignore = ['phys_constraint', 'base_shader', 'phys_object', 'phys_scene'] # don't need these
 module, module_name = None, None
 for f in os.listdir(__path__[0]):
     if not f.startswith('__') and (f.endswith('.py') \
                                    or f.endswith('.pyo') \
                                    or f.endswith('.pyc')):
         module_name = os.path.splitext(f)[0]
-        if module_name not in ext_names:
+        if module_name not in ext_names and module_name not in ignore:
             module = import_module('.'+module_name, __package__)
             if 'target' in dir(module) and 'order' in dir(module) and 'invoke' in dir(module):
                 extensions.append(module)

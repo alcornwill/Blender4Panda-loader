@@ -70,16 +70,20 @@ def invoke(data, fname):
             #     tex, cam = make_shadow_cam(name, obj)
 
         elif obj['type'] == 'CAMERA':
-            # todo 'default camera'?
-            ln = LensNode(name)
+            ln = Camera('cam')
             cnp = render.find("**/" + name)
+            # blenders camera transform is retarded
+            hpr = cnp.getHpr()
+            cnp.setHpr(Vec3(hpr.getY() - 90, hpr.getX() - 180, hpr.getX() - 180))
             if obj['camera_type'] == 'PERSP':
                 lens = PerspectiveLens()
                 lens.setFov(math.degrees(obj['fov']))
             elif obj['camera_type'] == 'ORTHO':
                 lens = OrthographicLens()
                 cnp.setScale(obj['scale'])
+            lens.setFilmSize(640, 480) # hmm
             lens.setNearFar(obj['near'], obj['far'])
             ln.setLens(lens)
-            ln.replaceNode(cnp.node())
+            # ln.replaceNode(cnp.node())
+            cnp.attachNewNode(ln)
 

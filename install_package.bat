@@ -1,0 +1,1 @@
+C:/Panda3d/python/python setup.py install

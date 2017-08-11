@@ -1,0 +1,64 @@
+{
+    "materials": {},
+    "objects": {
+        "Camera": {
+            "camera_type": "PERSP",
+            "far": 100.0,
+            "fov": 0.8575560450553894,
+            "near": 0.10000000149011612,
+            "type": "CAMERA"
+        },
+        "Camera.001": {
+            "camera_type": "ORTHO",
+            "far": 100.0,
+            "near": 0.10000000149011612,
+            "scale": 7.314285755157471,
+            "type": "CAMERA"
+        },
+        "Lamp": {
+            "energy": 1.0,
+            "lamp_color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lamp_distance": 29.999982833862305,
+            "lamp_type": "POINT",
+            "type": "LAMP"
+        },
+        "Lamp.001": {
+            "buffer_size": 2880,
+            "energy": 1.0,
+            "far": 30.00200080871582,
+            "film_size": 10.0,
+            "lamp_color": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "lamp_type": "SUN",
+            "near": 1.0007989406585693,
+            "shadow_caster": true,
+            "type": "LAMP"
+        }
+    },
+    "scene": {
+        "ambient_color": [
+            0.1,
+            0.1,
+            0.1
+        ],
+        "comment": "Export from Blender 2.78 (sub 0)",
+        "extensions": [
+            "base_objects",
+            "base_scene"
+        ],
+        "horizon_color": [
+            0.05087608844041824,
+            0.05087608844041824,
+            0.05087608844041824
+        ]
+    }
+}

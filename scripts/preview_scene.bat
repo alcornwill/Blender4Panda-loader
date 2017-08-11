@@ -1,0 +1,3 @@
+REM don't like always cd'ing to current dir...
+cd "C:\Users\alcor_000\Projects\Blender4Panda-loader\scripts"
+C:\Panda3D\python\python preview_scene.py %1
