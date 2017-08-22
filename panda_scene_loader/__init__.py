@@ -11,8 +11,8 @@ from os.path import basename
 # you should recheck flag to avoid error while loading scene
 
 
-def load(fname):
-    f = open(fname, 'r')
+def load(fname, scene):
+    f = open(fname + '.json', 'r')
     data_dict = json.loads(f.read())
     f.close()
     data_dict = data_dict
@@ -24,8 +24,8 @@ def load(fname):
     for ext in extensions:
         name = ext.__name__.split('.')[-1]
         if name not in extensions_: continue
-        ext.invoke(data_dict, fname)
+        ext.invoke(data_dict, fname, scene)
 
-    fn = basename(fname).replace('.egg.json', '.egg')
-    root = render.find(fn)
+    fn = basename(fname)
+    root = scene.find(fn)
     return root

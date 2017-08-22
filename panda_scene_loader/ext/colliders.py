@@ -4,27 +4,25 @@ from panda3d.core import *
 order = 30
 target = 'object'
 
-def get_mask(lst):
-    bits = [CollideMask.bit(i) for i, value in enumerate(lst) if value]
-    if len(bits) == 0:
-        mask = CollideMask.allOff()
-    else:
-        mask = bits[0]
-        for bit in bits[1:]: mask |= bit
-    return mask
+def copy_tags(a, b):
+    for k in a.getTagKeys():
+        v = a.getTag(k)
+        b.setTag(k, v)
 
-def invoke(data_dict, fname):
+def invoke(data_dict, fname, scene):
     colliders = data_dict['colliders']
     for name, collider in colliders.items():
-        parent = render.find("**/" + name)
+        parent = scene.find("**/" + name)
         bounds = collider["bounds"]
         radius = [i / 2.0 for i in bounds]
+
+        from_ = BitMask32(collider["from"])
+        into = BitMask32(collider["into"])
 
         # NOTE: only TRIANGLE_MESH, BOX, CAPSULE and SPHERE supported
         if collider["type"] == "TRIANGLE_MESH":
             # use visible geometry
             parent.node().setIntoCollideMask(into)
-            parent.setPythonTag('link', parent)
             continue
         if collider["type"] == "BOX":
             solid = CollisionBox(0.0, radius[0], radius[1], radius[2])
@@ -34,14 +32,15 @@ def invoke(data_dict, fname):
         if collider["type"] == "SPHERE":
             solid = CollisionSphere(0, 0, 0, max(*radius))
 
-        from_ = get_mask(collider["from"])
-        into = get_mask(collider["into"])
-
         col = CollisionNode(name)
         col.addSolid(solid) # if was compound add here
         col.setFromCollideMask(from_)
         col.setIntoCollideMask(into)
-        col.setPythonTag('link', parent)  # we do this now
-        np = parent.attachNewNode(col)  # might want to replace parent?
+        if collider['keep']:
+            np = parent.attachNewNode(col)
+            copy_tags(parent, np)
+        else:
+            col.replaceNode(parent.node())
+            parent.hide()
         handler = CollisionHandlerQueue()  # might want to parametize type of handler
         base.cTrav.addCollider(np, handler)

@@ -41,10 +41,10 @@ def make_shadow_cam(name, obj):
     # LCam.reparentTo(scene.lights[name]['NP'])
     return Ldepthmap, LCam
 
-def invoke(data, fname):
+def invoke(data, fname, scene):
     for name, obj in data['objects'].items():
         if obj['type'] == 'LAMP':
-            lnp = render.find("**/" + name)
+            lnp = scene.find("**/" + name)
             if obj['lamp_type'] == 'POINT':
                 light = PointLight(name)
                 # wow render.ls() says point light inherits (PerspectiveLens, PerspectiveLens, PerspectiveLens, ...)
@@ -59,11 +59,11 @@ def invoke(data, fname):
                 light = Spotlight(name)
                 lens = light.getLens()
                 lens.setFov(math.degrees(obj['fov']))
-            light.setColor(VBase4(*obj['lamp_color']))
-            # todo energy? (multiply color)
+            # light.setColor(VBase4(*obj['lamp_color'])) # there's something really weird about this value, it's smaller than it should be...
+            light.setColor(VBase4(*([obj['energy']] * 4)))
             light.replaceNode(lnp.node())
             # lnp.setHpr(hpr)  # why doesn't this work?...
-            render.setLight(lnp)
+            scene.setLight(lnp)
 
             # if obj['lamp_type'] in ['SUN', 'SPOT'] and 'shadow_caster' in obj and obj['shadow_caster']:
             #     lens.setNearFar(obj['near'], obj['far'])
@@ -71,7 +71,7 @@ def invoke(data, fname):
 
         elif obj['type'] == 'CAMERA':
             ln = Camera('cam')
-            cnp = render.find("**/" + name)
+            cnp = scene.find("**/" + name)
             # blenders camera transform is retarded
             hpr = cnp.getHpr()
             cnp.setHpr(Vec3(hpr.getY() - 90, hpr.getX() - 180, hpr.getX() - 180))

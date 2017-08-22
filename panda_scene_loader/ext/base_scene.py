@@ -16,26 +16,30 @@ def linearrgb_to_srgb(col):
             new_col.append(1.055 * pow(c, 1.0/2.4) - 0.055)
     return new_col
 
-def invoke(data_dict, fname):
+def invoke(data_dict, fname, scene):
     data = data_dict['scene']
-    egg_file = fname.replace('.egg.json', '.egg')
-    egg_file = egg_file.replace('\\','/')
-    if ':' in egg_file:
-        # has drive letter
-        egg_file = egg_file.replace(':', '')
-        drive_letter, egg_file = egg_file[:1], egg_file[1:]
-        drive_letter = drive_letter.lower()
-        egg_file = '/' + drive_letter + egg_file
+    egg_file = Filename.fromOsSpecific(fname)
     model = loader.loadModel(egg_file)
-    model.reparent_to(render)
+    model.reparent_to(scene)
     if 'horizon_color' in data:
         r,g,b = linearrgb_to_srgb(data['horizon_color'])
         #r,g,b = data['horizon_color']
         base.win.setClearColor((r, g, b, 1))
     if 'ambient_color' in data:
-        node = AmbientLight("Ambient Light")
+        node = AmbientLight("Ambient")
         color = data['ambient_color']
         node.setColor(Vec4(color[0], color[1], color[2], 1.0))
         np = NodePath(node)
-        np.reparent_to(render)
-        render.setLight(np)
+        np.reparent_to(scene)
+        scene.setLight(np)
+    if 'use_mist' in data:
+        start = data['mist_start']
+        depth = data['mist_depth']
+        fog = Fog("Fog")
+        # fog.setColor(WHITE)
+        # fog.setColor(base.win.getClearColor())
+        falloff = data['mist_falloff']
+        if falloff == 'LINEAR':
+            fog.setLinearRange(start, start + depth)
+        # todo others
+        scene.setFog(fog)
